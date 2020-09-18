@@ -1,5 +1,0 @@
-stockSymbols = ['AAPL', 'ABT']
-exchangeSymbols = ['OANDA:EUR_USD', 'OANDA:AUD_USD', 'OANDA:GBP_USD']
-exchanges = ['EUR', 'AUD', 'GBP']
-currencyAll = ['USD', 'EUR', 'AUD', 'GBP', 'ALL']
-currency = ['USD', 'EUR', 'AUD', 'GBP']
