@@ -10,7 +10,7 @@ def getHistoricalQuotes():
   
     # Input
     stockSymbol = (input(c.askOneStock)).upper()
-    if(InputValidator().isStockSymbolInvalid(stockSymbol)):
+    if(InputValidator().isStockSymbolHistoricalInvalid(stockSymbol)):
         return
     currencySymbol = (input(c.askOneCurrency)).upper()
     if(InputValidator().isCurrencyConvertionInvalid(currencySymbol)): 
@@ -26,6 +26,9 @@ def getHistoricalQuotes():
         print('Sorry, an error while retrieving data with the API occurred')
         return   
     dataset = int_api.getData()
+    if(not dataset):
+        print('Sorry, an error while retrieving data with the API occurred')
+        return
     convertion = dataset['quote'][currencySymbol]
 
     requiredQuotes = (usd*convertion).values.tolist()
@@ -52,6 +55,9 @@ def getLatestQuote():
         print('Sorry, an error while retrieving data with the API occurred')
         return   
     dataset = int_api.getData()
+    if(not dataset):
+        print('Sorry, an error while retrieving data with the API occurred')
+        return
     currentQuote = dataset['c']
 
     convertion = 1
@@ -62,6 +68,9 @@ def getLatestQuote():
             print('Sorry, an error while retrieving data with the API occurred')
             return   
         dataset = int_api.getData()
+        if(not dataset):
+            print('Sorry, an error while retrieving data with the API occurred')
+            return
         convertion = dataset['quote'][currencySymbol]
 
     # Return
@@ -98,7 +107,7 @@ def getGraphHistoricalQuotes():
 
     # Get inputs  
     stockSymbol = (input(c.askOneStock)).upper()
-    if(InputValidator().isStockSymbolInvalid(stockSymbol)):
+    if(InputValidator().isStockSymbolHistoricalInvalid(stockSymbol)):
         return
 
     # Retrieve the information
@@ -135,6 +144,9 @@ def getGraphHistoricalIntervalQuotes():
         print('Sorry, an error while retrieving data with the API occurred')
         return   
     dataset = int_api.getData()
+    if(not dataset):
+        print('Sorry, an error while retrieving data with the API occurred')
+        return 
 
 
     # Print

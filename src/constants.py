@@ -8,7 +8,6 @@ dataset = InteractionAPI(url).getData()
 stockSymbols = list()
 for elem in dataset:
     stockSymbols.append(elem['symbol'])
-stockSymbols = stockSymbols[0:20]
 
 
 # Currency supported for conversion
@@ -53,16 +52,14 @@ askOneStock = "Enter a stock symbol: "
 
 askOneCurrency = "Enter a currency symbol: "
 
-askCurrencyFrom = "Enter the currency symbol FROM among the availables ("
-for currency in currencyHistorical:
-    askCurrencyFrom = askCurrencyFrom + " " + currency + " "
-askCurrencyFrom = askCurrencyFrom + ") Your choice: "
 
+askCurrencyText = ("Enter the currency symbol <DIRECTION> among the availables: \n"
+                    + "\n".join(["- " + x for x in currencyHistorical])
+                    + "\nYour choice: ")
 
-askCurrencyTo = "Enter the currency symbol FROM among the availables ("
-for currency in currencyHistorical:
-    askCurrencyTo = askCurrencyTo + " " + currency + " "
-askCurrencyTo = askCurrencyTo + ") Your choice: "
+askCurrencyFrom = askCurrencyText.replace("<DIRECTION>", "FROM")
+askCurrencyTo = askCurrencyText.replace("<DIRECTION>", "TO")
+
 
 askBeginInterval = "Enter the begin of your desired time interval in format yyyy-mm-dd: "
 

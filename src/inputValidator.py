@@ -1,12 +1,22 @@
 import time
 import datetime
 import constants as c
+from interactionDB import InteractionDB
 
 class InputValidator:
 
 
     def isStockSymbolInvalid(self, stockSymbol):
         if(stockSymbol not in c.stockSymbols):
+            print('ERROR: This stock symbol is not supported')
+            return True
+        return False
+
+
+    def isStockSymbolHistoricalInvalid(self, stockSymbol):
+        df = InteractionDB('src/database.db').getQueryFromDB( 'select * from stockHistoricalData')
+        stockHistoricalSymbols = df.columns.tolist()
+        if(stockSymbol not in stockHistoricalSymbols):
             print('ERROR: This stock symbol is not supported')
             return True
         return False

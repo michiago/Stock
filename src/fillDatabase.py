@@ -18,42 +18,44 @@ def getDateTo():
 
 
 def createStockAnagraphicDataTable():
+  
   stockAnagraphicDataList = list()
+  count = 0
+
   for symbol in c.stockSymbols:
     url ='https://finnhub.io/api/v1/stock/profile2?symbol='+symbol+'&token='+c.TOKEN   
     int_api = InteractionAPI(url)
-    if(int_api.hasResponse):
+    if int_api.hasResponse:
       dataset = int_api.getData()
-      if(dataset is not None):
+      if dataset:
         stockAnagraphicDataList.append(dataset.values())
-      else:
-        continue
-    else:
-      continue
-  
-  dataframe = pd.DataFrame(data=stockAnagraphicDataList, columns = dataset.keys())
+        count=count+1
+        if count == 100:
+          break
+
+  dataframe = pd.DataFrame(data=stockAnagraphicDataList, columns=dataset.keys())
   InteractionDB('src/database.db').insertInDB(dataframe, 'stockAnagraphicData')
 
 
 def createStockHistoricalDataTable():
+  
   FROM = str(getDateFrom())
   TO = str(getDateTo())
   stockHistoricalDataList = list()
-  availableStockSymbols = c.stockSymbols
+  availableStockSymbols = list()
+  count = 0
 
   for symbol in c.stockSymbols:
     url ='https://finnhub.io/api/v1/stock/candle?symbol='+symbol+'&resolution=W&from='+FROM+'&to='+TO+'&token='+c.TOKEN
     int_api = InteractionAPI(url)
-    if(int_api.hasResponse):
+    if int_api.hasResponse:
       dataset = int_api.getData()
-      if(dataset is not None):
+      if(dataset and dataset['s'] == 'ok'):
         stockHistoricalDataList.append(dataset['c'])
-      else:
-        availableStockSymbols.remove(symbol)
-        continue
-    else:
-      availableStockSymbols.remove(symbol)
-      continue
+        availableStockSymbols.append(symbol)
+        count=count+1
+        if count == 100:
+          break
 
 
   dataframe = pd.DataFrame(data=stockHistoricalDataList, index = availableStockSymbols)
@@ -67,11 +69,9 @@ def createExchangesRateAnagraphicDataTable():
   for agency in c.agencies:
     url ='https://finnhub.io/api/v1/forex/symbol?exchange='+agency+'&token='+c.TOKEN 
     int_api = InteractionAPI(url)
-    if(not int_api.hasResponse):
-      continue
-    else: 
+    if(int_api.hasResponse):
       dataset = int_api.getData()
-      if(dataset is not None):
+      if(dataset):
         for elem in dataset: 
           if(elem['displaySymbol'] in c.requiredExchangeRates):
             row = [agency, elem['description'], elem['displaySymbol'], elem['symbol']]
@@ -91,9 +91,8 @@ def createExchangeRatesHistoricalDataTable():
     int_api = InteractionAPI(url)
     if(int_api.hasResponse):
       dataset = int_api.getData()
-      exchangeRatesHistoricalDataList.append(dataset['c'])
-    else:
-      continue
+      if(dataset and dataset['s'] == 'ok'):
+        exchangeRatesHistoricalDataList.append(dataset['c'])
 
   dataframe = pd.DataFrame(data=exchangeRatesHistoricalDataList, index = c.exchangesDisplaySymbols)
   dataframeTrasposed = dataframe.transpose()

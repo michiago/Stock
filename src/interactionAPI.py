@@ -13,10 +13,7 @@ class InteractionAPI:
 
 
     def hasResponse(self):
-        if(self.response.status_code == 200):
-            return True
-        else:
-            return False
+        return (self.response.status_code == 200)
             
     def getData(self):         
         if(self.hasResponse()):
