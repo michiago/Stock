@@ -1,5 +1,5 @@
 import fillDatabase  as db
 import application as app
 
-db.createTables()
+#db.createTables()
 app.menu()

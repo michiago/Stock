@@ -20,8 +20,12 @@ def getHistoricalQuotes():
     USDquotes = InteractionDB('src/database.db').getQueryFromDB( 'select ' + stockSymbol + ' from stockHistoricalData')
     usd=USDquotes[stockSymbol]
 
-    url = 'https://finnhub.io/api/v1/forex/rates?base=USD&token=btg5t0f48v6r32agadkg'
-    dataset = InteractionAPI(url).getDataFromApi()
+    url = 'https://finnhub.io/api/v1/forex/rates?base=USD&TOKEN='+c.TOKEN
+    int_api = InteractionAPI(url)
+    if(not int_api.hasResponse):
+        print('Sorry, an error while retrieving data with the API occurred')
+        return   
+    dataset = int_api.getData()
     convertion = dataset['quote'][currencySymbol]
 
     requiredQuotes = (usd*convertion).values.tolist()
@@ -42,14 +46,22 @@ def getLatestQuote():
         return
 
     # Retrieve information
-    url = 'https://finnhub.io/api/v1/quote?symbol='+stockSymbol+'&token=btg5t0f48v6r32agadkg'
-    dataset = InteractionAPI(url).getDataFromApi()
+    url = 'https://finnhub.io/api/v1/quote?symbol='+stockSymbol+'&token='+c.TOKEN
+    int_api = InteractionAPI(url)
+    if(not int_api.hasResponse):
+        print('Sorry, an error while retrieving data with the API occurred')
+        return   
+    dataset = int_api.getData()
     currentQuote = dataset['c']
 
     convertion = 1
     if(currencySymbol != 'USD'):
-        url = 'https://finnhub.io/api/v1/forex/rates?base=USD&token=btg5t0f48v6r32agadkg'
-        dataset = InteractionAPI(url).getDataFromApi()
+        url = 'https://finnhub.io/api/v1/forex/rates?base=USD&token='+c.TOKEN
+        int_api = InteractionAPI(url)
+        if(not int_api.hasResponse):
+            print('Sorry, an error while retrieving data with the API occurred')
+            return   
+        dataset = int_api.getData()
         convertion = dataset['quote'][currencySymbol]
 
     # Return
@@ -117,8 +129,13 @@ def getGraphHistoricalIntervalQuotes():
 
 
     # Retrieve the information
-    url ='https://finnhub.io/api/v1/stock/candle?symbol='+stockSymbol+'&resolution=D&from='+FROMunix+'&to='+TOunix+'&token=btg5t0f48v6r32agadkg'
-    dataset = InteractionAPI(url).getDataFromApi()
+    url ='https://finnhub.io/api/v1/stock/candle?symbol='+stockSymbol+'&resolution=D&from='+FROMunix+'&to='+TOunix+'&token='+c.TOKEN
+    int_api = InteractionAPI(url)
+    if(not int_api.hasResponse):
+        print('Sorry, an error while retrieving data with the API occurred')
+        return   
+    dataset = int_api.getData()
+
 
     # Print
     u.drowTheGraph(dataset['c'])
