@@ -10,37 +10,25 @@ import pandas as pd
 
 def getHistoricalQuotes():
   
+    # Input
     stockSymbol = input(c.askOneStock)        
     if(u.isStockSymbolInvalid(stockSymbol)):
         return
-    currencySymbol = input(c.askOneCurrencyOrAll)
+    currencySymbol = input(c.askOneCurrency)
     if(u.isCurrencyInvalid(currencySymbol)): 
         return
-    
-       
-    connection = sqlite3.connect('database.db')
-    USDquotes = pd.read_sql_query( 'select ' + stockSymbol + ' from stockHistoricalData', connection)
+
+    # Retrieve information
+    USDquotes = u.getQueryFromDB( 'select ' + stockSymbol + ' from stockHistoricalData', connection)
     usd=USDquotes[stockSymbol]
-    
-    if(currencySymbol == 'USD' or currencySymbol == 'ALL'):         
-        print(f"The USD historical quotes of the stock {stockSymbol} are: {usd}")
-    
-    if(currencySymbol == 'EUR' or currencySymbol == 'ALL'):  
-        EURexchange = pd.read_sql_query( 'select EUR from exchangeRatesHistoricalData', connection)
-        eur=(EURexchange['EUR'])
-        print(f"The EUR historical quotes of the stock {stockSymbol} are: {usd * 1/eur}")
 
-    if(currencySymbol == 'AUD' or currencySymbol == 'ALL'):  
-        AUDexchange = pd.read_sql_query( 'select AUD from exchangeRatesHistoricalData', connection)
-        aud=(AUDexchange['AUD'])
-        print(f"The AUD historical quotes of the stock {stockSymbol} are: {usd * 1/aud}")
+    url = 'https://finnhub.io/api/v1/forex/rates?base=USD&token=btg5t0f48v6r32agadkg'
+    dataset = u.getDataFromApi(url)
+    convertion = dataset['quote'][currencySymbol]
+    print(convertion)
 
-    if(currencySymbol == 'GBP' or currencySymbol == 'ALL'):  
-        GBPexchange = pd.read_sql_query( 'select GBP from exchangeRatesHistoricalData', connection)
-        gbp=(GBPexchange['GBP'])
-        print(f"The GBP historical quotes of the stock {stockSymbol} are: {usd * 1/gbp}")
-
-    connection.close()
+   # Return        
+    print(f"The {currencySymbol} historical quotes of the stock {stockSymbol} are: {usd*convertion}") 
 
 
 
@@ -50,23 +38,23 @@ def getLatestQuote():
     stockSymbol = input(c.askOneStock)        
     if(u.isStockSymbolInvalid(stockSymbol)):
         return
-    currencySymbol = input(c.askOneCurrencyOrAll)
+    currencySymbol = input(c.askOneCurrency)
     if(u.isCurrencyInvalid(currencySymbol)): 
         return
 
+    # Retrieve information
     url = 'https://finnhub.io/api/v1/quote?symbol='+stockSymbol+'&token=btg5t0f48v6r32agadkg'
-    content = requests.get(url).content
-    dataset = json.loads(content)
+    dataset = u.getDataFromApi(url)
     currentQuote = dataset['c']
 
+    convertion = 1
     if(currencySymbol != 'USD'):
-        connection = sqlite3.connect('database.db')
-        convertions = pd.read_sql_query( 'select ' +currencySymbol+ ' from exchangeRatesHistoricalData', connection)
-        convertion=(convertions[currencySymbol].iloc[-1])
-        currentQuote = currentQuote * 1/convertion
-        connection.close()
+        url = 'https://finnhub.io/api/v1/forex/rates?base=USD&token=btg5t0f48v6r32agadkg'
+        dataset = u.getDataFromApi(url)
+        convertion = dataset['quote'][currencySymbol]
 
-    print(f"The {currencySymbol} latest quote of the stock {stockSymbol} is: {currentQuote} ")
+    # Return
+    print(f"The {currencySymbol} latest quote of the stock {stockSymbol} is: {currentQuote * convertion} ")
 
 
 
@@ -105,9 +93,7 @@ def getGraphHistoricalQuotes():
         return
 
     # Compute
-    connection = sqlite3.connect('database.db')
-    quotes = pd.read_sql_query( 'select ' +stockSymbol+ ' from stockHistoricalData', connection)
-    connection.close()
+    quotes = u.getQueryFromDB( 'select ' +stockSymbol+ ' from stockHistoricalData', connection)
     
     # Print
     u.drowTheGraph(quotes[quotes.columns[0]].values.tolist())
@@ -130,8 +116,7 @@ def getGraphHistoricalIntervalQuotes():
 
     # Retrive data
     url ='https://finnhub.io/api/v1/stock/candle?symbol='+stockSymbol+'&resolution=D&from='+FROM+'&to='+TO+'&token=btg5t0f48v6r32agadkg'
-    content = requests.get(url).content
-    dataset = json.loads(content)
+    dataset = u.getDataFromApi(url)
 
     # Print
     u.drowTheGraph(dataset['c'])

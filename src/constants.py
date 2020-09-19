@@ -1,7 +1,7 @@
-stockSymbols = ['AAPL', 'ABT']
+stockSymbols = ['AAPL', 'ABT'] #to fill
 exchangeSymbols = ['OANDA:EUR_USD', 'OANDA:AUD_USD', 'OANDA:GBP_USD']
 exchanges = ['EUR', 'AUD', 'GBP']
-currencyAll = ['USD', 'EUR', 'AUD', 'GBP', 'ALL']
+currencyAll = ['USD', 'EUR', 'AUD', 'GBP', 'JPY'] #to fill
 currency = ['USD', 'EUR', 'AUD', 'GBP']
 
 menuApp = """Enter:
@@ -13,22 +13,9 @@ menuApp = """Enter:
 - 'q' to quit
 Your choice: """
 
-askOneStock = """Enter a stock symbol: """
+askOneStock = "Enter a stock symbol: "
 
-askOneCurrencyOrAll = """Enter a currency symbol:
-- 'USD'
-- 'EUR'
-- 'AUD'
-- 'GBP'
-- 'ALL' to get the conversion in all the above currency
-Your choice: """
-
-askOneCurrency = """Enter a currency symbol:
-- 'USD' to get the base value
-- 'EUR' to get the base value converted in eur
-- 'AUD' to get the base value converted in aud
-- 'GBP' to get the base value converted in gbp
-Your choice: """
+askOneCurrency = "Enter a currency symbol: "
 
 askCurrencyFrom = """Enter the currency symbol FROM:
 - 'USD' 
@@ -44,6 +31,6 @@ askCurrencyTo = """Enter the currency symbol TO:
 - 'GBP'
 Your choice: """
 
-askBeginInterval = """Enter the begin of your desired time interval in format Unix Timestamp: """
+askBeginInterval = "Enter the begin of your desired time interval in format Unix Timestamp: "
 
-askEndInterval = """Enter the end of your desired time interval in format Unix Timestamp: """
+askEndInterval = "Enter the end of your desired time interval in format Unix Timestamp: "

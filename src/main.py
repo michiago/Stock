@@ -5,38 +5,18 @@ import application as app
 app.menu()
 
 
+#TO DO:
+# -creare tabella solo se non aggiorno da tot
+# -input uppercase
+# -aggiungere tabella mancante
+# -input date non in unix
+# -controlli input da rivedere, per currency lista lunga
+# -classe per interfacciarsi con db e con api
+# -riempire liste di stock e currency
+# -sistemare i prompt
+# -tornare errore se api da no_data
 
-
-# import time
-# import datetime
-# import requests
-# import json
-
-
-# def getDateFrom():
-#   FROM = datetime.date.today() - datetime.timedelta(365)
-#   return int(time.mktime(FROM.timetuple()))
-
-# def getDateTo():
-#   TO = datetime.date.today()
-#   return int(time.mktime(TO.timetuple()))
-
-# symbol='AAPL'
-# FROM = str(getDateFrom())
-# print(FROM)
-# TO = str(getDateTo())
-# print(TO)
-
-# url = 'https://finnhub.io/api/v1/forex/candle?symbol='+symbol+'&resolution=W&from='+FROM+'&to='+TO+'&token=btg5t0f48v6r32agadkg'
-# content = requests.get(url).content
-# dataset = json.loads(content)
-# print(len(dataset['c']))
-
-# url ='https://finnhub.io/api/v1/stock/candle?symbol='+symbol+'&resolution=W&from='+FROM+'&to='+TO+'&token=btg5t0f48v6r32agadkg'
-# content = requests.get(url).content
-# dataset = json.loads(content)
-# print(len(dataset['c']))
-
-
-
-       
+# -documentazione
+# -test
+# -gitignore
+# -circle CI
