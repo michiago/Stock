@@ -1,8 +1,41 @@
-stockSymbols = ['AAPL', 'ABT'] #to fill
-exchangeSymbols = ['OANDA:EUR_USD', 'OANDA:AUD_USD', 'OANDA:GBP_USD']
-exchanges = ['EUR', 'AUD', 'GBP']
-currencyAll = ['USD', 'EUR', 'AUD', 'GBP', 'JPY'] #to fill
-currency = ['USD', 'EUR', 'AUD', 'GBP']
+import utils as u
+
+# Stock symbols supported
+url = ('https://finnhub.io/api/v1/stock/symbol?exchange=US&token=btg5t0f48v6r32agadkg')
+dataset = u.getDataFromApi(url)
+stockSymbols = list()
+for elem in dataset:
+    stockSymbols.append(elem['symbol'])
+stockSymbols = stockSymbols[1:20]
+
+# Currency supported for conversion
+url = ('https://finnhub.io/api/v1/forex/rates?base=USD&token=btg5t0f48v6r32agadkg')
+dataset = u.getDataFromApi(url)
+currencyAll = dataset['quote'].keys()
+
+# Agencies providing forex exchanges
+url = ('https://finnhub.io/api/v1/forex/exchange?token=btg5t0f48v6r32agadkg')
+dataset = u.getDataFromApi(url)
+agencies = dataset
+
+# Currencies supported for historical data
+currencyHistorical = ['USD', 'EUR', 'AUD', 'GBP']
+
+# Exchanges display supported
+requiredExchangeRates = ['EUR/USD', 'AUD/USD', 'GBP/USD']
+
+# Exchange symbols supported for agency oanda
+url =('https://finnhub.io/api/v1/forex/symbol?exchange=oanda&token=btg5t0f48v6r32agadkg')
+dataset = u.getDataFromApi(url)
+exchangeSymbols = list()
+exchangesDisplaySymbols = list()
+for elem in dataset:
+    if(elem['displaySymbol'] in requiredExchangeRates):
+        exchangeSymbols.append(elem['symbol'])
+        exchangesDisplaySymbols.append(elem['displaySymbol'][0:3])
+
+
+
 
 menuApp = """Enter:
 - '1' to get historical stock quotes in any foreign currency
@@ -17,20 +50,17 @@ askOneStock = "Enter a stock symbol: "
 
 askOneCurrency = "Enter a currency symbol: "
 
-askCurrencyFrom = """Enter the currency symbol FROM:
-- 'USD' 
-- 'EUR' 
-- 'AUD' 
-- 'GBP'
-Your choice: """
+askCurrencyFrom = "Enter the currency symbol FROM among the availables ("
+for currency in currencyHistorical:
+    askCurrencyFrom = askCurrencyFrom + " " + currency + " "
+askCurrencyFrom = askCurrencyFrom + ") Your choice: "
 
-askCurrencyTo = """Enter the currency symbol TO:
-- 'USD' 
-- 'EUR' 
-- 'AUD' 
-- 'GBP'
-Your choice: """
 
-askBeginInterval = "Enter the begin of your desired time interval in format Unix Timestamp: "
+askCurrencyTo = "Enter the currency symbol FROM among the availables ("
+for currency in currencyHistorical:
+    askCurrencyTo = askCurrencyTo + " " + currency + " "
+askCurrencyTo = askCurrencyTo + ") Your choice: "
 
-askEndInterval = "Enter the end of your desired time interval in format Unix Timestamp: "
+askBeginInterval = "Enter the begin of your desired time interval in format yyyy-mm-dd: "
+
+askEndInterval = "Enter the end of your desired time interval in format yyyy-mm-dd: "

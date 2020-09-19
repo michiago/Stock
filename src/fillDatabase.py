@@ -26,7 +26,6 @@ def createStockAnagraphicDataTable():
   u.insertInDB(dataframe, 'stockAnagraphicData')
 
 
-
 def createStockHistoricalDataTable():
   FROM = str(getDateFrom())
   TO = str(getDateTo())
@@ -42,6 +41,21 @@ def createStockHistoricalDataTable():
   u.insertInDB(dataframeTrasposed, 'stockHistoricalData')
 
 
+def createExchangesRateAnagraphicDataTable():
+  exchangesRateAnagraphicDataList = list ()
+  
+  for agency in c.agencies:
+    url =('https://finnhub.io/api/v1/forex/symbol?exchange='+agency+'&token=btg5t0f48v6r32agadkg')
+    dataset = u.getDataFromApi(url)
+    for elem in dataset: 
+      if(elem['displaySymbol'] in c.requiredExchangeRates):
+        row = [agency, elem['description'], elem['displaySymbol'], elem['symbol']]
+        exchangesRateAnagraphicDataList.append(row)
+
+  dataframe = pd.DataFrame(data=exchangesRateAnagraphicDataList, columns = ['agency', 'description', 'displaySymbol', 'symbol'])
+  u.insertInDB(dataframe, 'exchangesRateAnagraphicData')
+
+
 def createExchangeRatesHistoricalDataTable():
   FROM = str(getDateFrom())
   TO = str(getDateTo())
@@ -52,7 +66,7 @@ def createExchangeRatesHistoricalDataTable():
     dataset = u.getDataFromApi(url)
     exchangeRatesHistoricalDataList.append(dataset['c'])
   
-  dataframe = pd.DataFrame(data=exchangeRatesHistoricalDataList, index = c.exchanges)
+  dataframe = pd.DataFrame(data=exchangeRatesHistoricalDataList, index = c.exchangesDisplaySymbols)
   dataframeTrasposed = dataframe.transpose()
   u.insertInDB(dataframeTrasposed, 'exchangeRatesHistoricalData')
 
@@ -60,4 +74,5 @@ def createExchangeRatesHistoricalDataTable():
 def createTables():
   createStockAnagraphicDataTable()
   createStockHistoricalDataTable()
+  createExchangesRateAnagraphicDataTable()
   createExchangeRatesHistoricalDataTable()
