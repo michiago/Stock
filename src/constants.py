@@ -1,21 +1,22 @@
-import utils as u
+from interactionAPI import InteractionAPI
 
 # Stock symbols supported
 url = ('https://finnhub.io/api/v1/stock/symbol?exchange=US&token=btg5t0f48v6r32agadkg')
-dataset = u.getDataFromApi(url)
+dataset = InteractionAPI(url).getDataFromApi()
 stockSymbols = list()
 for elem in dataset:
     stockSymbols.append(elem['symbol'])
-stockSymbols = stockSymbols[1:20]
+stockSymbols = stockSymbols[0:20]
+
 
 # Currency supported for conversion
 url = ('https://finnhub.io/api/v1/forex/rates?base=USD&token=btg5t0f48v6r32agadkg')
-dataset = u.getDataFromApi(url)
+dataset = InteractionAPI(url).getDataFromApi()
 currencyAll = dataset['quote'].keys()
 
 # Agencies providing forex exchanges
 url = ('https://finnhub.io/api/v1/forex/exchange?token=btg5t0f48v6r32agadkg')
-dataset = u.getDataFromApi(url)
+dataset = InteractionAPI(url).getDataFromApi()
 agencies = dataset
 
 # Currencies supported for historical data
@@ -26,7 +27,7 @@ requiredExchangeRates = ['EUR/USD', 'AUD/USD', 'GBP/USD']
 
 # Exchange symbols supported for agency oanda
 url =('https://finnhub.io/api/v1/forex/symbol?exchange=oanda&token=btg5t0f48v6r32agadkg')
-dataset = u.getDataFromApi(url)
+dataset = InteractionAPI(url).getDataFromApi()
 exchangeSymbols = list()
 exchangesDisplaySymbols = list()
 for elem in dataset:

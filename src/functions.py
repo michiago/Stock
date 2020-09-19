@@ -1,10 +1,8 @@
 import constants as c
 import utils as u
-
-import requests
-import json
-import sqlite3
-import pandas as pd
+from interactionDB import InteractionDB
+from inputValidator import InputValidator
+from interactionAPI import InteractionAPI
 
 
 
@@ -12,18 +10,18 @@ def getHistoricalQuotes():
   
     # Input
     stockSymbol = (input(c.askOneStock)).upper()
-    if(u.isStockSymbolInvalid(stockSymbol)):
+    if(InputValidator().isStockSymbolInvalid(stockSymbol)):
         return
     currencySymbol = (input(c.askOneCurrency)).upper()
-    if(u.isCurrencyConvertionInvalid(currencySymbol)): 
+    if(InputValidator().isCurrencyConvertionInvalid(currencySymbol)): 
         return
 
     # Retrieve information
-    USDquotes = u.getQueryFromDB( 'select ' + stockSymbol + ' from stockHistoricalData')
+    USDquotes = InteractionDB('src/database.db').getQueryFromDB( 'select ' + stockSymbol + ' from stockHistoricalData')
     usd=USDquotes[stockSymbol]
 
     url = 'https://finnhub.io/api/v1/forex/rates?base=USD&token=btg5t0f48v6r32agadkg'
-    dataset = u.getDataFromApi(url)
+    dataset = InteractionAPI(url).getDataFromApi()
     convertion = dataset['quote'][currencySymbol]
 
     requiredQuotes = (usd*convertion).values.tolist()
@@ -37,21 +35,21 @@ def getLatestQuote():
 
     # Get inputs
     stockSymbol = (input(c.askOneStock)).upper()      
-    if(u.isStockSymbolInvalid(stockSymbol)):
+    if(InputValidator().isStockSymbolInvalid(stockSymbol)):
         return
     currencySymbol = (input(c.askOneCurrency)).upper()
-    if(u.isCurrencyConvertionInvalid(currencySymbol)): 
+    if(InputValidator().isCurrencyConvertionInvalid(currencySymbol)): 
         return
 
     # Retrieve information
     url = 'https://finnhub.io/api/v1/quote?symbol='+stockSymbol+'&token=btg5t0f48v6r32agadkg'
-    dataset = u.getDataFromApi(url)
+    dataset = InteractionAPI(url).getDataFromApi()
     currentQuote = dataset['c']
 
     convertion = 1
     if(currencySymbol != 'USD'):
         url = 'https://finnhub.io/api/v1/forex/rates?base=USD&token=btg5t0f48v6r32agadkg'
-        dataset = u.getDataFromApi(url)
+        dataset = InteractionAPI(url).getDataFromApi()
         convertion = dataset['quote'][currencySymbol]
 
     # Return
@@ -62,11 +60,11 @@ def getGraphHistoricalExchangeRate():
 
     # Get inputs
     currencyFrom = (input(c.askCurrencyFrom)).upper()
-    if(u.isCurrencyHistoricalInvalid(currencyFrom) ):
+    if(InputValidator().isCurrencyHistoricalInvalid(currencyFrom) ):
         return
     
     currencyTo = (input(c.askCurrencyTo)).upper()
-    if(u.isCurrencyHistoricalInvalid(currencyTo)):
+    if(InputValidator().isCurrencyHistoricalInvalid(currencyTo)):
         return
     if(currencyTo == currencyFrom):
         print("ERROR: FROM and TO can't be equal")
@@ -88,11 +86,11 @@ def getGraphHistoricalQuotes():
 
     # Get inputs  
     stockSymbol = (input(c.askOneStock)).upper()
-    if(u.isStockSymbolInvalid(stockSymbol)):
+    if(InputValidator().isStockSymbolInvalid(stockSymbol)):
         return
 
     # Retrieve the information
-    quotes = u.getQueryFromDB( 'select ' +stockSymbol+ ' from stockHistoricalData')
+    quotes = InteractionDB('src/database.db').getQueryFromDB( 'select ' +stockSymbol+ ' from stockHistoricalData')
     
     # Print
     u.drowTheGraph(quotes[quotes.columns[0]].values.tolist())
@@ -102,16 +100,16 @@ def getGraphHistoricalIntervalQuotes():
 
     # Get inputs
     stockSymbol = (input(c.askOneStock)).upper()
-    if(u.isStockSymbolInvalid(stockSymbol)):
+    if(InputValidator().isStockSymbolInvalid(stockSymbol)):
         return
         
     FROM = input(c.askBeginInterval)
-    if(u.isDateFormatInvalid(FROM)):
+    if(InputValidator().isDateFormatInvalid(FROM)):
         return
     TO = input(c.askEndInterval)
-    if(u.isDateFormatInvalid(TO)):
+    if(InputValidator().isDateFormatInvalid(TO)):
         return   
-    if(u.areDatesInconsistent(FROM, TO)):
+    if(InputValidator().areDatesInconsistent(FROM, TO)):
         return
 
     FROMunix = u.getUnixFormatFromString(FROM)
@@ -120,7 +118,7 @@ def getGraphHistoricalIntervalQuotes():
 
     # Retrieve the information
     url ='https://finnhub.io/api/v1/stock/candle?symbol='+stockSymbol+'&resolution=D&from='+FROMunix+'&to='+TOunix+'&token=btg5t0f48v6r32agadkg'
-    dataset = u.getDataFromApi(url)
+    dataset = InteractionAPI(url).getDataFromApi()
 
     # Print
     u.drowTheGraph(dataset['c'])
