@@ -3,6 +3,7 @@ import src.utils as u
 from src.interactionDB import InteractionDB
 from src.inputValidator import InputValidator
 from src.interactionAPI import InteractionAPI
+import math
 
 
 def getHistoricalQuotes():
@@ -33,10 +34,11 @@ def getHistoricalQuotes():
     convertion = dataset["quote"][currencySymbol]
 
     requiredQuotes = (usd * convertion).values.tolist()
+    requiredQuotesPrintable = [x for x in requiredQuotes if (math.isnan(x) == False)] 
 
     # Return
     print(
-        f"The {currencySymbol} historical quotes of the stock {stockSymbol} are: {requiredQuotes}"
+        f"The {currencySymbol} historical quotes of the stock {stockSymbol} are: {requiredQuotesPrintable}"
     )
 
 
@@ -104,7 +106,9 @@ def getGraphHistoricalExchangeRate():
         exchanges = u.convertToUSD(currencyFrom) * u.convertFromUSD(currencyTo)
 
     # Print
-    u.drowTheGraph(exchanges.values.tolist())
+    result = exchanges.values.tolist()
+    resultPrintable = [x for x in result if (math.isnan(x) == False)] 
+    u.drowTheGraph(resultPrintable)
 
 
 def getGraphHistoricalQuotes():
@@ -120,7 +124,9 @@ def getGraphHistoricalQuotes():
     )
 
     # Print
-    u.drowTheGraph(quotes[quotes.columns[0]].values.tolist())
+    result = quotes[quotes.columns[0]].values.tolist()
+    resultPrintable = [x for x in result if (math.isnan(x) == False)] 
+    u.drowTheGraph(resultPrintable)
 
 
 def getGraphHistoricalIntervalQuotes():
@@ -163,4 +169,6 @@ def getGraphHistoricalIntervalQuotes():
         return
 
     # Print
-    u.drowTheGraph(dataset["c"])
+    result = dataset["c"]
+    resultPrintable = [x for x in result if (math.isnan(x) == False)] 
+    u.drowTheGraph(resultPrintable)

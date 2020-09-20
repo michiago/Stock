@@ -4,7 +4,7 @@ Solution implemented using the python3.8 programming language in a docker contai
 
 I retrieve data from the [finnhub](https://finnhub.io/docs/api#forex-symbols) website.
 
-I store historical data in a [SQLite](https://docs.python.org/3/library/sqlite3.html) database, I have chosen this solution because SQLite is a lightweight database that doesn’t require a separate server process but store the entire data as a file.
+I store historical data in a [SQLite](https://docs.python.org/3/library/sqlite3.html) database, I have chosen this solution because SQLite is a lightweight database that doesn’t require a separate server process but store the entire data as a file. You can use the application [DB Browser for SQLite](https://sqlitebrowser.org) to read the database file.
 
 I installed the following libraries:
 * [plotext](https://pypi.org/project/plotext/) as suggested, to plot data directly on the terminal,
