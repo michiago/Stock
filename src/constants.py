@@ -40,11 +40,11 @@ for elem in dataset:
 
 
 menuApp = """Enter:
-- '1' to get historical stock quotes in any foreign currency
-- '2' to get the latest quote for a given asset
-- '3' to get a graph of the whole historical data for an exchange rate
+- '1' to get historical stock quotes for a given stock and a given foreign currency
+- '2' to get the latest quote for a given stock
+- '3' to get a graph of the whole historical quotes for a given exchange rate
 - '4' to get a graph of the whole historical data for a stock
-- '5' to get a graph of the historical data for a stock in a given interval of time
+- '5' to get a graph of the historical quotes for a given stock and a given time interval
 - 'q' to quit
 Your choice: """
 
