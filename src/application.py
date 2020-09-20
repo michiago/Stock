@@ -1,5 +1,5 @@
-import functions as f
-import constants as c
+import src.functions as f
+import src.constants as c
 
 
 def menu():

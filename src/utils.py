@@ -1,13 +1,11 @@
-from interactionDB import InteractionDB
+from src.interactionDB import InteractionDB
 import plotext.plot as plx
-import constants as c
 import time
 import datetime
 
 
-
 def getUnixFormatFromString(dateString):
-    date = datetime.datetime.strptime(dateString, '%Y-%m-%d')
+    date = datetime.datetime.strptime(dateString, "%Y-%m-%d")
     return str(int(time.mktime(date.timetuple())))
 
 
@@ -18,9 +16,11 @@ def drowTheGraph(subject):
 
 
 def convertToUSD(currency):
-    exchanges = InteractionDB('src/database.db').getQueryFromDB( 'select ' +currency+ ' from exchangeRatesHistoricalData')
+    exchanges = InteractionDB("src/database.db").getQueryFromDB(
+        "select " + currency + " from exchangeRatesHistoricalData"
+    )
     return exchanges[exchanges.columns[0]]
 
 
 def convertFromUSD(currency):
-    return 1/convertToUSD(currency)
+    return 1 / convertToUSD(currency)
