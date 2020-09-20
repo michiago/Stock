@@ -23,7 +23,8 @@ You can run the application with the following command:
 ```
 python src/main.py
 ```
-Once started the application will first create the database and then launch an interactive menu that will allow you to choose one functionality at a time among the 5 supported, until you decide to quit the application.
+Once started the application will first ask you if you want to regenerate the database, in case yes it will do it.
+After that it will launch an interactive menu that will allow you to choose one functionality at a time among the 5 supported, until you decide to quit the application.
 Once chosen a functionality the application will ask you to insert your inputs.
 
 The supported functionalities are:
