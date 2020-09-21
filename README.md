@@ -10,6 +10,7 @@ I installed the following libraries:
 * [plotext](https://pypi.org/project/plotext/) as suggested, to plot data directly on the terminal,
 * [requests](https://pypi.org/project/requests/) to send HTTP request, in order to ease the interaction with the API of the [finnhub](https://finnhub.io/docs/api#forex-symbols) website,
 * [pandas](https://pypi.org/project/pandas/) to handle the interaction with the database, to ease the insertion of data in it and the query requests.
+* [pytest](https://pypi.org/project/pytest/) to handle unittests.
 
 ## How to run the code
 In order to execute the application inside the docker container:
